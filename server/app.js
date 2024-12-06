@@ -161,15 +161,10 @@ const handleAiPrompt = async (prompt, templateName) => {
       headers: { "Content-Type": "application/json" },
     });
     const jsonResponse =
-<<<<<<< HEAD
-      response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return jsonResponse.replace("```json\n", "").replace("\n```", "");
-=======
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const responseJson =  jsonResponse.replace('```json\n', '').replace('\n```', '');
     pushToDB(JSON.parse(responseJson), templateName);
     return responseJson;
->>>>>>> f9778b4b56363a6b185929326e400ceb2e3eddcc
   } catch (error) {
     console.error(
       "Error in AI API request:",
@@ -200,10 +195,9 @@ app.post("/ai/exercise", async (req, res) => {
   res.send(result || "Error processing AI response");
 });
 
-<<<<<<< HEAD
-app.use("/api/user", userRouter);
-app.use("/api/blog", blogRouter);
-=======
+
+
+
 
 // Get last AI response
 
@@ -230,4 +224,4 @@ app.get('/latest', async (req, res) => {
 
 
 app.use("/api/user", userRouter);
->>>>>>> f9778b4b56363a6b185929326e400ceb2e3eddcc
+app.use("/api/blog", blogRouter);

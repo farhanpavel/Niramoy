@@ -2,9 +2,13 @@
 import ChipSection from "@/components/ai/page";
 import Image from "next/image";
 import React, { useState } from "react";
+import axios from "axios";
+import { useRouter} from "next/navigation";
 
 const AIPromptPage: React.FC = () => {
+  const router = useRouter();  
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (userInput.trim() === "") {
@@ -12,21 +16,22 @@ const AIPromptPage: React.FC = () => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch("/api/mental-health", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ problem: userInput }),
+      const response = await axios.post("http://localhost:4000/ai/niramoy", {
+        prompt: userInput,
       });
 
-      if (!response.ok) throw new Error("Failed to submit your problem");
+      console.log("Response:", response.data);
+      //use next router to navigate to the 'http://localhost:3000/patientdashboard/exercise" page
 
-      const data = await response.json();
-      alert("Response recorded successfully!");
-      console.log("Gemini API Response:", data);
+      router.push("/patientdashboard/nutrion");
     } catch (error) {
       console.error("Error:", error);
       alert("There was an error processing your request.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,10 +56,15 @@ const AIPromptPage: React.FC = () => {
         className="w-[70vw] mx-28 mt-5 p-5 rounded-full border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#E81046]"
       />
       <button
-        className="mt-5 px-10 py-3 rounded-full bg-[#E81046] text-white cursor-pointer"
         onClick={handleSubmit}
+        className="mt-5 px-10 py-3 rounded-full bg-[#E81046] text-white cursor-pointer flex items-center justify-center"
+        disabled={loading}
       >
-        জমা দিন
+        {loading ? (
+          'জমা দেওয়া হচ্ছে...'
+        ) : (
+          "জমা দিন"
+        )}
       </button>
       <div className="mt-6" />
       <ChipSection />
