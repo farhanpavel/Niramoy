@@ -9,6 +9,12 @@ app.use(cors());
 const PORT = process.env.PORT;
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyD4tJ9Gk9WFr7iTDZfeoP7aJcXynglhDVM";
 
+
+import { PrismaClient } from '@prisma/client';
+import { pushToDB } from "./module/db-helper.js";
+const prisma = new PrismaClient();
+
+
 app.use(express.json());
 app.get("/", (req, res) => {
   return res.send("hello");
@@ -149,12 +155,16 @@ const handleAiPrompt = async (prompt, templateName) => {
     });
     const jsonResponse =
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    return jsonResponse.replace('```json\n', '').replace('\n```', '');
+    const responseJson =  jsonResponse.replace('```json\n', '').replace('\n```', '');
+    pushToDB(JSON.parse(responseJson), templateName);
+    return responseJson;
   } catch (error) {
     console.error('Error in AI API request:', error.response?.data || error.message);
     return null;
   }
 };
+
+
 
 // Routes
 app.post('/ai/niramoy', async (req, res) => {
@@ -174,5 +184,30 @@ app.post('/ai/exercise', async (req, res) => {
   const result = await handleAiPrompt(prompt, 'exercise_template.json');
   res.send(result || 'Error processing AI response');
 });
+
+
+// Get last AI response
+
+app.get('/latest', async (req, res) => {
+  const response = await prisma.response.findFirst({
+    orderBy: {
+      created_at: 'desc',
+    },
+    include: {
+      ai_response: true,
+      diet_plan: {
+        include: {
+          meals: true,
+        }
+      },
+      exercises: true,
+    },
+  });
+
+  
+
+  res.send(response);
+});
+
 
 app.use("/api/user", userRouter);

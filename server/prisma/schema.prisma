@@ -16,11 +16,28 @@ model User{
   role String
 }
 
+model Response {
+  id            Int      @id @default(autoincrement())
+  
+  ai_response_id Int
+  diet_plan_id Int
+
+  created_at    DateTime  @default(now())
+
+  ai_response   AIResponse @relation(fields: [ai_response_id], references: [id])
+  exercises     Exercise[]
+  diet_plan    DietPlan @relation(fields: [diet_plan_id], references: [id])
+}
+
 model AIResponse {
   id            Int      @id @default(autoincrement())
   conversation_id Int
+
   content       String
-  created_at    DateTime
+  created_at    DateTime  @default(now())
+
+  responses     Response[]
+  
 }
 
 model Exercise {
@@ -29,6 +46,10 @@ model Exercise {
   description   String
   category      String
   duration_minutes Int
+  created_at    DateTime  @default(now())
+
+  response_id   Int
+  response      Response @relation(fields: [response_id], references: [id])
 }
 
 model DietPlan {
@@ -37,11 +58,13 @@ model DietPlan {
   description   String
   calorie_target Int
   meals         Meal[]
+  responses     Response[]
+  created_at    DateTime  @default(now())
 }
 
 model Meal {
   id            Int      @id @default(autoincrement())
-  dietPlanId    Int
+  dietPlanId    Int       
   type          String
   items         String
   recipe_description String
