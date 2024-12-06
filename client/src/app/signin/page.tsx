@@ -43,7 +43,7 @@ export default function Page() {
       const data = await response.json();
       console.log(data);
       if (data.role === "patient") {
-        router.push("/patientdashboard/overview");
+        router.push("/ai");
       }
     } catch (err) {
       console.log("error", err);

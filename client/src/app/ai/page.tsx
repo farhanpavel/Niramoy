@@ -3,10 +3,10 @@ import ChipSection from "@/components/ai/page";
 import Image from "next/image";
 import React, { useState } from "react";
 import axios from "axios";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const AIPromptPage: React.FC = () => {
-  const router = useRouter();  
+  const router = useRouter();
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -19,15 +19,8 @@ const AIPromptPage: React.FC = () => {
     setLoading(true);
 
     try {
-<<<<<<< HEAD
-      const response = await fetch("http://localhost:4000/api/mental-health", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ problem: userInput }),
-=======
       const response = await axios.post("http://localhost:4000/ai/niramoy", {
         prompt: userInput,
->>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
       });
 
       console.log("Response:", response.data);
@@ -67,11 +60,7 @@ const AIPromptPage: React.FC = () => {
         className="mt-5 px-10 py-3 rounded-full bg-[#E81046] text-white cursor-pointer flex items-center justify-center"
         disabled={loading}
       >
-        {loading ? (
-          'জমা দেওয়া হচ্ছে...'
-        ) : (
-          "জমা দিন"
-        )}
+        {loading ? "জমা দেওয়া হচ্ছে..." : "জমা দিন"}
       </button>
       <div className="mt-6" />
       <ChipSection />
