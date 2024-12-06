@@ -70,7 +70,9 @@ const AIPromptPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 text-primary bg-white border border-primary rounded-full shadow"
             style={{ borderColor: "#E81046", color: "#E81046" }}
           >
-            <span className="text-sm font-medium">Calorie Target: {dietPlan.calorie_target}</span>
+            <span className="text-sm font-medium">
+              Calorie Target: {dietPlan.calorie_target}
+            </span>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -81,10 +83,16 @@ const AIPromptPage: React.FC = () => {
             >
               <div className="flex items-center mb-2">
                 {getIcon(meal.type)}
-                <h3 className="text-lg font-bold capitalize ml-2">{meal.type}</h3>
+                <h3 className="text-lg font-bold capitalize ml-2">
+                  {meal.type}
+                </h3>
               </div>
-              <p className="mb-2"><strong>Items:</strong> {meal.items}</p>
-              <p><strong>Recipe:</strong> {meal.recipe_description}</p>
+              <p className="mb-2">
+                <strong>Items:</strong> {meal.items}
+              </p>
+              <p>
+                <strong>Recipe:</strong> {meal.recipe_description}
+              </p>
             </div>
           ))}
         </div>
