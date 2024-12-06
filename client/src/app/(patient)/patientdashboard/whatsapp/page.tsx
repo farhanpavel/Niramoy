@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { jsPDF } from "jspdf";
+import axios from "axios";
 
 export default function Page() {
   const [whatsNumber, setWhatsNumber] = useState(""); // State for WhatsApp number
@@ -99,10 +100,40 @@ export default function Page() {
       generatePDF();
 
       // Add your logic to send the PDF via WhatsApp (using an API or other methods)
+      sendMessage()
+
     } catch (err) {
       setError("Error: " + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const sendMessage = async () => {
+    const url = 'https://graph.facebook.com/v21.0/492083883992907/messages';
+    const token = 'EAAIF0JoKuLIBO4fIq1fPLZA8COooqc4966DRp2jBZCGdhwzNY58sN3PQgttAmH04ZBrL0aNGDBqIDHPAuHds5SmEEKazUgMjQUUNbZCKYoHkvTu24WC8jw7Nq6iVSSKOHQZCdiFTRFzJg4FyvBeJpdybBtRfsjt2arNVuqVGBoZAzQdFal9MHgAZA9WYvPlwQ5GP8j0qXchsILBIaLb5t9FrqMXlGIZD';
+    const data = {
+      messaging_product: 'whatsapp',
+      to: '8801618070200',
+      type: 'template',
+      template: {
+        name: 'hello_world',
+        language: {
+          code: 'en_US'
+        }
+      }
+    };
+
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Message sent:', response.data);
+    } catch (error) {
+      console.error('Error sending message:', error.response ? error.response.data : error.message);
     }
   };
 
