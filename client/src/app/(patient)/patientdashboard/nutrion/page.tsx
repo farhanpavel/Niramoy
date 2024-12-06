@@ -1,41 +1,24 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Sun, Moon, Cloud } from "lucide-react"; // Importing icons from lucide-react
 
 const AIPromptPage: React.FC = () => {
-  const dietPlan = {
-    name: "পিঠের ব্যথায় উপকারী খাবার",
-    description:
-      "পিঠের ব্যথার সময় পুষ্টিকর খাবার খাওয়া খুবই জরুরী।  ক্যালসিয়াম,  ম্যাগনেসিয়াম, এবং ভিটামিন D সমৃদ্ধ খাবার খাওয়ার  চেষ্টা করুন।  এইগুলো  হাড়ের স্বাস্থ্যের জন্য  অনেক গুরুত্বপূর্ণ।  প্রচুর পরিমাণে পানি পান করুন।  শাকসবজি, ফল,  মাছ, এবং  দুধ  খাওয়া উচিত।  জাঙ্ক ফুড,  মিষ্টি  খাবার, এবং  চিনি  যুক্ত  পানীয়  সীমিত  করুন।",
-    calorie_target: 1800,
-    meals: [
-      {
-        id: 1,
-        dietPlanId: 1,
-        type: "breakfast",
-        items: "ওটমিল,  ফল (আপেল,  কেলা),  দুধ",
-        recipe_description:
-          "ওটমিলের সাথে  কিছু  ফল কেটে মিশিয়ে  দুধ  মিশিয়ে  খেতে পারেন।  এটি  শক্তিশালী  এবং  পুষ্টিকর একটি  নাশতা।",
-      },
-      {
-        id: 2,
-        dietPlanId: 1,
-        type: "lunch",
-        items: "সবুজ শাক,  ভাত,  মুরগির  ছোট  টুকরো,  সালাদ",
-        recipe_description:
-          "ভাতের সাথে  শাক  ভাজা  এবং  মুরগির  ছোট  টুকরো  মেশিয়ে  খেতে  পারেন।  সালাদ  সাথে  খাওয়া  খুবই  উপকারী।",
-      },
-      {
-        id: 3,
-        dietPlanId: 1,
-        type: "dinner",
-        items: "মাছ,  ভাত,  সবজি",
-        recipe_description:
-          "ভাতের সাথে  মাছ  ভাপে  পাকিয়ে  এবং  বিভিন্ন  সবজি  মিশিয়ে  খেতে পারেন।  এতে  প্রচুর  প্রোটিন  এবং  পুষ্টি  থাকে।",
-      },
-    ],
-  };
+  const [dietPlan, setDietPlan] = useState(null);
+
+  useEffect(() => {
+    const fetchDietPlan = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/latest");
+        setDietPlan(response.data.diet_plan);
+      } catch (error) {
+        console.error("Error fetching diet plan:", error);
+      }
+    };
+
+    fetchDietPlan();
+  }, []);
 
   const getIcon = (type: string) => {
     switch (type) {
@@ -50,6 +33,10 @@ const AIPromptPage: React.FC = () => {
     }
   };
 
+  if (!dietPlan) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-5">
       <Image
@@ -62,7 +49,7 @@ const AIPromptPage: React.FC = () => {
       <h1 className="text-2xl font-bold text-center mb-5">
         সুস্থ দেহ, সুস্থ মন: পুষ্টির মাধ্যমে সঠিক পথ অনুসরণ করুন
       </h1>
-      <div className="bg-white p-16 rounded-lg shadow-md w-full max-w-4xl">
+      <div className="bg-white p-5 rounded-lg shadow-md w-full max-w-4xl">
         <h2 className="text-xl font-bold mb-3">{dietPlan.name}</h2>
         <p className="mb-3">{dietPlan.description}</p>
         <div className="flex flex-wrap gap-4 p-4">
@@ -77,7 +64,7 @@ const AIPromptPage: React.FC = () => {
           {dietPlan.meals.map((meal) => (
             <div
               key={meal.id}
-              className="bg-gray-50 p-4 rounded-2xl shadow border-2 border-[#E81046] text-black hover:bg-[#E81046] hover:text-white hover:border-0 transition duration-300"
+              className="bg-gray-50 p-4 rounded-lg shadow border-2 border-[#E81046] text-black hover:bg-[#E81046] hover:text-white hover:border-0 transition duration-300"
             >
               <div className="flex items-center mb-2">
                 {getIcon(meal.type)}
