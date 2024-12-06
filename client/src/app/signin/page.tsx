@@ -24,7 +24,7 @@ export default function Page() {
     }
 
     try {
-      const response = await fetch(`http://192.168.68.117:8080/login`, {
+      const response = await fetch(`http://localhost:4000/api/user/check`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,25 +41,10 @@ export default function Page() {
       }
       setvalid(false);
       const data = await response.json();
-      setLogged(true);
-      setTimeout(() => {
-        if (data.role === "student") {
-          Cookies.set("id", data.id);
-          Cookies.set("role", data.role);
-          router.push("/studentdashboard/overview");
-        } else if (data.role === "admin") {
-          Cookies.set("id", data.id);
-          Cookies.set("role", data.role);
-
-          router.push("/admindashboard/overview");
-        } else {
-          Cookies.set("id", data.id);
-          Cookies.set("hallId", data.hall_id);
-          Cookies.set("role", data.role);
-
-          router.push("/provostdashboard/overview");
-        }
-      }, 2000);
+      console.log(data);
+      if (data.role === "patient") {
+        router.push("/patientdashboard/overview");
+      }
     } catch (err) {
       console.log("error", err);
     }
@@ -82,13 +67,17 @@ export default function Page() {
               <p>আপনার অ্যাকাউন্টে লগইন করুন অনুগ্রহ করে</p>
             </div>
             <div className="2xl:w-3/4 w-3/4">
-              <form action="" className="flex flex-col gap-y-2">
+              <form
+                action=""
+                className="flex flex-col gap-y-2"
+                onSubmit={handleSubmit}
+              >
                 <input
                   type="email"
                   name="email"
                   className="border-[1px] border-gray-300 p-2 text-[#4a4a4a] rounded-[5px] bg-[#F0F4F4]"
-                  placeholder="ইমেইল
-                  "
+                  placeholder="ইমেইল"
+                  onChange={handleChange}
                 />
                 {isvalid && (
                   <div className="text-left text-sm text-red-600 mx-1">
@@ -100,6 +89,7 @@ export default function Page() {
                   name="password"
                   className="border-[1px] border-gray-300 p-2 text-[#4a4a4a] rounded-[5px] bg-[#F0F4F4]"
                   placeholder="পাসওয়ার্ড"
+                  onChange={handleChange}
                 />
                 {isvalid && (
                   <div className="text-left text-sm text-red-600 mx-1">

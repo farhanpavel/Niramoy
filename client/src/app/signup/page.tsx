@@ -24,16 +24,13 @@ export default function Page() {
     }
     if (password == confirmpassword) {
       try {
-        const response = await fetch(
-          `http://192.168.68.117:8080/register/user`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(user),
-          }
-        );
+        const response = await fetch(`http://localhost:4000/api/user`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        });
         if (!response.ok) {
           alert("Server Error");
           throw new Error("Failed to submit data");
