@@ -10,6 +10,7 @@ import { CgGym } from "react-icons/cg";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaMicroblog } from "react-icons/fa";
 import { MdOutlineForum } from "react-icons/md";
+import { RiWhatsappFill } from "react-icons/ri";
 import Image from "next/image";
 
 type NavItem = {
@@ -56,6 +57,12 @@ const navItems: NavItem[] = [
     title: "forums",
     href: "/patientdashboard/forums",
     icon: <MdOutlineForum />,
+    label: "forums",
+  },
+  {
+    title: "whatsapp",
+    href: "/patientdashboard/whatsapp",
+    icon: <RiWhatsappFill />,
     label: "forums",
   },
 ];

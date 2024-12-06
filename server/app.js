@@ -11,11 +11,9 @@ const PORT = process.env.PORT;
 const API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyD4tJ9Gk9WFr7iTDZfeoP7aJcXynglhDVM";
 
-
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 import { pushToDB } from "./module/db-helper.js";
 const prisma = new PrismaClient();
-
 
 app.use(express.json());
 app.get("/", (req, res) => {
@@ -161,10 +159,15 @@ const handleAiPrompt = async (prompt, templateName) => {
       headers: { "Content-Type": "application/json" },
     });
     const jsonResponse =
+<<<<<<< HEAD
+      response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    return jsonResponse.replace("```json\n", "").replace("\n```", "");
+=======
         response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const responseJson =  jsonResponse.replace('```json\n', '').replace('\n```', '');
     pushToDB(JSON.parse(responseJson), templateName);
     return responseJson;
+>>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
   } catch (error) {
     console.error(
       "Error in AI API request:",
@@ -173,8 +176,6 @@ const handleAiPrompt = async (prompt, templateName) => {
     return null;
   }
 };
-
-
 
 // Routes
 app.post("/ai/niramoy", async (req, res) => {
@@ -195,6 +196,8 @@ app.post("/ai/exercise", async (req, res) => {
   res.send(result || "Error processing AI response");
 });
 
+<<<<<<< HEAD
+=======
 
 
 
@@ -223,5 +226,6 @@ app.get('/latest', async (req, res) => {
 });
 
 
+>>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
 app.use("/api/user", userRouter);
 app.use("/api/blog", blogRouter);

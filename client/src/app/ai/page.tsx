@@ -19,8 +19,15 @@ const AIPromptPage: React.FC = () => {
     setLoading(true);
 
     try {
+<<<<<<< HEAD
+      const response = await fetch("http://localhost:4000/api/mental-health", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ problem: userInput }),
+=======
       const response = await axios.post("http://localhost:4000/ai/niramoy", {
         prompt: userInput,
+>>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
       });
 
       console.log("Response:", response.data);
