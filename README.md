@@ -53,4 +53,4 @@ npm install
 npm run dev
 ```
 
-4. Access the application at `http://localhost:3000`
+4. Access the frontend at `http://localhost:3000` and backend at `http://localhost:4000`
