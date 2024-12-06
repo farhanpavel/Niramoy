@@ -37,8 +37,8 @@ export function Barchart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>ব্যায়ামের পরিমান</CardTitle>
+        <CardDescription>১ জানুয়ারি - ১ জুন</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -61,10 +61,11 @@ export function Barchart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          গত ৬ মাসে আপনি ১২৫ ঘণ্টা ব্যায়াম করেছেন{" "}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          আপনার মানসিক স্বাস্থ্য ভালো রাখতে এই ব্যায়ামগুলো করুন
         </div>
       </CardFooter>
     </Card>

@@ -115,11 +115,11 @@ const chartConfig = {
     label: "Page Views",
   },
   desktop: {
-    label: "Desktop",
+    label: "দিন",
     color: "hsl(var(--chart-1))",
   },
   mobile: {
-    label: "Mobile",
+    label: "রাত",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -140,10 +140,8 @@ export function Bigchart() {
     <Card>
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
-          <CardTitle>Bar Chart - Interactive</CardTitle>
-          <CardDescription>
-            Showing total visitors for the last 3 months
-          </CardDescription>
+          <CardTitle>মেন্টাল হেলথ স্কোর</CardTitle>
+          <CardDescription>শেষ ৩ মাসে আপনার গড় স্কোর সন্তোষজনক</CardDescription>
         </div>
         <div className="flex">
           {["desktop", "mobile"].map((key) => {
