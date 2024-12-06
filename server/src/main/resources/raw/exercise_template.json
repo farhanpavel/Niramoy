@@ -1,0 +1,26 @@
+{
+  "exercise": {
+    "id": "BIGINT PRIMARY KEY",
+    "name": "VARCHAR(255)",
+    "description": "TEXT. 200 words",
+    "muscle_groups": [
+      {
+        "name": "VARCHAR(255)"
+      }
+    ],
+    "equipment": [
+      {
+        "name": "VARCHAR(255)"
+      }
+    ],
+    "steps": [
+      {
+        "step_number": "INT",
+        "instruction": "TEXT"
+      }
+    ],
+    "category": "VARCHAR(100)",
+    "difficulty_level": "VARCHAR(50)",
+    "duration_minutes": "INT"
+  }
+}

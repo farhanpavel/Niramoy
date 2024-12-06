@@ -1,0 +1,29 @@
+{
+  "recipe": {
+    "name": "VARCHAR(255)",
+    "description": "TEXT. 200 words",
+    "ingredients": [
+      {
+        "name": "VARCHAR(255)",
+        "quantity": "VARCHAR(50)"
+      }
+    ],
+    "steps": [
+      {
+        "step_number": "INT",
+        "instruction": "TEXT"
+      }
+    ],
+    "category": "VARCHAR(100)",
+    "prep_time_minutes": "INT",
+    "cook_time_minutes": "INT",
+    "total_time_minutes": "INT",
+    "servings": "INT",
+    "nutrition_facts": {
+      "calories": "INT",
+      "protein_g": "FLOAT",
+      "fat_g": "FLOAT",
+      "carbohydrates_g": "FLOAT"
+    }
+  }
+}
