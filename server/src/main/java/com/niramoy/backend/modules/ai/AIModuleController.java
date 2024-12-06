@@ -32,8 +32,4 @@ public class AIModuleController {
         String prompt = requestBody.get("prompt");
         return aiModuleService.exerciseDescription(prompt);
     }
-//    @GetMapping("/ai/template")
-//    public String getRawJson() {
-//        return aiModuleService.getRawJson();
-//    }
 }
