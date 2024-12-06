@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  user_id String @id @default(uuid())
+  name String
+  email String @unique
+  password String
+  role String
+  provost Provost?
+ 
+}
+model Hall{
+  hall_id String @id @default(uuid())
+  hall_name String 
+  capacity String
+  floor String
+  room String
+  bed String
+  fee String
+
+}
+model Provost{
+  provost_id String @id
+  active String
+  hall_id String
+  user User @relation(fields: [provost_id],references: [user_id],onDelete: Cascade) 
+}
+model Notice{
+  notice_id String @id @default(uuid())
+  id String 
+  title String
+  description String
+  role String 
+  date DateTime @default(now())
+}
+
+model Form {
+  name              String
+  form_id           String   @id @unique @default(uuid())
+  registration_num  String
+  student_id        String @unique
+  department        String
+  enroll_year       DateTime
+  expected_grad     DateTime
+  hall_id           String 
+  imageUrl          String? 
+  active            Int @default(0) 
+  hall_active Int @default(0) 
+  payment Payment[]
+}
+model Room {
+  student_id String @id
+  hall_id String 
+  floor String
+  room String
+  
+}
+
+model Payment {
+  payment_id    String @id  @unique  @default(uuid())
+  student_id    String
+  hall_id       String   
+  status        Int      
+  month         String  
+  year          String   
+  payment_date  DateTime @default(now()) 
+  fee           String
+  form          Form     @relation(fields: [student_id], references: [student_id], onDelete: Cascade) 
+}

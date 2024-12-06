@@ -1,10 +1,55 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [isvalid, setvalid] = useState(false);
+  const router = useRouter();
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    role: "patient",
+  });
+  const { name, email, password, confirmpassword } = user;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(user);
+    if (!email || !password || !name || !confirmpassword) {
+      alert("Please fill everything.");
+      return;
+    }
+    if (password == confirmpassword) {
+      try {
+        const response = await fetch(
+          `http://192.168.68.117:8080/register/user`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(user),
+          }
+        );
+        if (!response.ok) {
+          alert("Server Error");
+          throw new Error("Failed to submit data");
+        } else {
+          router.push("/signin");
+        }
+      } catch (err) {
+        console.log("error", err);
+      }
+    } else {
+      alert("Password Doesnot Match");
+    }
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
   return (
     <div className="font-tiro">
       <div className="min-h-screen flex items-center justify-center">
@@ -23,13 +68,15 @@ export default function Page() {
               <p>আপনার অ্যাকাউন্টে সাইন আপ করুন অনুগ্রহ করে</p>
             </div>
             <div className="2xl:w-3/4 w-3/4">
-              <form action="" className="flex flex-col">
+              <form action="" className="flex flex-col" onSubmit={handleSubmit}>
                 <div>
                   <input
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline focus:border-[#E81046]"
                     id="name"
                     type="text"
                     placeholder="নাম"
+                    onChange={handleChange}
+                    name="name"
                   />
                 </div>
                 <div>
@@ -38,6 +85,8 @@ export default function Page() {
                     id="email"
                     type="email"
                     placeholder="ইমেইল"
+                    name="email"
+                    onChange={handleChange}
                   />
                 </div>
                 <div>
@@ -46,6 +95,8 @@ export default function Page() {
                     id="password"
                     type="password"
                     placeholder="পাসওয়ার্ড"
+                    name="password"
+                    onChange={handleChange}
                   />
                 </div>
                 <div>
@@ -54,6 +105,8 @@ export default function Page() {
                     id="password"
                     type="password"
                     placeholder="পাসওয়ার্ড নিশ্চিত করুন"
+                    name="confirmpassword"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="space-x-3">

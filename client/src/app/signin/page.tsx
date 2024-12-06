@@ -3,8 +3,67 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useRouter } from "next/navigation";
 export default function Page() {
   const [isvalid, setvalid] = useState(false);
+  const [user, setUser] = useState({ email: "", password: "" });
+  const { email, password } = user;
+  const router = useRouter();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser((x) => ({
+      ...x,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(user);
+    if (!email || !password) {
+      alert("Please fill in both email and password.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://192.168.68.117:8080/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      if (!response.ok) {
+        if (response.status === 401) {
+          setvalid(true);
+        } else {
+          throw new Error("invalid");
+        }
+        return;
+      }
+      setvalid(false);
+      const data = await response.json();
+      setLogged(true);
+      setTimeout(() => {
+        if (data.role === "student") {
+          Cookies.set("id", data.id);
+          Cookies.set("role", data.role);
+          router.push("/studentdashboard/overview");
+        } else if (data.role === "admin") {
+          Cookies.set("id", data.id);
+          Cookies.set("role", data.role);
+
+          router.push("/admindashboard/overview");
+        } else {
+          Cookies.set("id", data.id);
+          Cookies.set("hallId", data.hall_id);
+          Cookies.set("role", data.role);
+
+          router.push("/provostdashboard/overview");
+        }
+      }, 2000);
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
   return (
     <div className="font-tiro">
       <div className="min-h-screen flex items-center justify-center">
