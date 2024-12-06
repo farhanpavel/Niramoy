@@ -13,7 +13,7 @@ const AIPromptPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch("/api/mental-health", {
+      const response = await fetch("http://localhost:4000/api/mental-health", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ problem: userInput }),
