@@ -1,3 +1,4 @@
+"use client"
 import ChipSection from '@/components/ai/page';
 import Image from 'next/image';
 import React from 'react';

@@ -1,0 +1,35 @@
+{
+  "AI_Responses": [{
+    "id": "BIGINT PRIMARY KEY",
+    "conversation_id": "BIGINT FOREIGN KEY REFERENCES Conversations(id)",
+    "content": "TEXT",
+    "created_at": "TIMESTAMP"
+  }],
+  "Exercises": [{
+    "id": "BIGINT PRIMARY KEY",
+    "name": "VARCHAR(255)",
+    "description": "TEXT. 200 words",
+    "category": "VARCHAR(100)",
+    "duration_minutes": "INT"
+  }],
+  "Diet_Plans": {
+    "id": "BIGINT PRIMARY KEY",
+    "name": "VARCHAR(255)",
+    "description": "TEXT. 200 words",
+    "calorie_target": "INT",
+    "meals": {
+      "breakfast": {
+        "items": "TEXT",
+        "recipe_description":  "TEXT. 200 words recipe guide"
+      },
+      "lunch":{
+        "items": "TEXT",
+        "recipe_description":  "TEXT. 200 words recipe guide"
+      },
+      "dinner": {
+        "items": "TEXT",
+        "recipe_description":  "TEXT. 200 words recipe guide"
+      }
+    }
+  }
+}
