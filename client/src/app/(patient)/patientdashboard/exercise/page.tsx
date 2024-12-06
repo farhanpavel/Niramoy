@@ -1,31 +1,24 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Activity, Dumbbell } from "lucide-react"; // Importing icons from lucide-react
 
 const ExercisePage: React.FC = () => {
-  const exercises = [
-    {
-      id: 5,
-      name: "পিঠের জন্য স্ট্রেচিং",
-      description:
-        "পিঠের ব্যথা কমাতে নিয়মিত স্ট্রেচিং করা খুবই গুরুত্বপূর্ণ।  এই ব্যায়ামগুলি পেশী শিথিল করতে এবং পিঠের নমনীয়তা বৃদ্ধি করতে সাহায্য করে।  কিছু সহজ স্ট্রেচ যেমন,  ক্যাট-কাউ স্ট্রেচ,  স্পাইনাল টুইস্ট, এবং হ্যামস্ট্রিং স্ট্রেচ করতে পারেন।  প্রতিটি স্ট্রেচ 30 সেকেন্ড ধরে ধরে রাখুন এবং দিনে দুইবার করুন।  ব্যায়াম শুরু করার আগে হালকা ওয়ার্ম-আপ করুন এবং শেষে কুল ডাউন করুন।  যদি ব্যথা বেড়ে যায়, তাহলে ব্যায়াম বন্ধ করুন এবং ডাক্তারের সাথে পরামর্শ করুন।",
-      category: "পিঠের ব্যথা",
-      duration_minutes: 15,
-      created_at: "2024-12-06T10:34:08.336Z",
-      response_id: 3,
-    },
-    {
-      id: 6,
-      name: "প্ল্যাঙ্ক",
-      description:
-        "প্ল্যাঙ্ক একটি দারুণ ব্যায়াম যা পিঠের পেশীকে শক্তিশালী করে।  এটি করার সময় আপনার শরীর একটি সোজা লাইনে থাকতে হবে,  কোমর নিচে নামানো যাবে না।  প্রথমে 15-30 সেকেন্ড ধরে রাখার চেষ্টা করুন এবং ধীরে ধীরে সময় বাড়ান।  দিনে দুইবার করুন।  যদি ব্যথা বেড়ে যায়, তাহলে ব্যায়াম বন্ধ করুন এবং ডাক্তারের সাথে পরামর্শ করুন।",
-      category: "পিঠের ব্যথা",
-      duration_minutes: 5,
-      created_at: "2024-12-06T10:34:08.345Z",
-      response_id: 3,
-    },
-  ];
+  const [exercises, setExercises] = useState([]);
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/latest");
+        setExercises(response.data.exercises);
+      } catch (error) {
+        console.error("Error fetching exercises:", error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
   const icons = [
     <Activity key="activity" className="w-6 h-6" />,
@@ -45,7 +38,7 @@ const ExercisePage: React.FC = () => {
         সুস্থ দেহ, সুস্থ মন: ব্যায়ামের মাধ্যমে সঠিক পথ অনুসরণ করুন
       </h1>
       <div className="bg-white p-16 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 className="text-xl text-center  font-bold mb-8">সম্ভাব্য সহায়ক ব্যায়াম</h2>
+        <h2 className="text-xl text-center font-bold mb-8">সম্ভাব্য সহায়ক ব্যায়াম</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {exercises.map((exercise, index) => (
             <div
