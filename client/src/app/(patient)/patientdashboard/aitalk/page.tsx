@@ -49,7 +49,7 @@ export default function ChatbotPage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-[90%] max-w-3xl bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-2xl font-bold text-center text-[#E81046] mb-4">
-          AI Talk
+          তোমার বন্ধু
         </h1>
 
         <div

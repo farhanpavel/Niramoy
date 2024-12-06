@@ -8,12 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  user_id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  role String
+model User {
+  user_id     String @id @default(uuid())
+  name        String
+  email       String @unique
+  password    String
+  role        String
+
 }
 
 model AIResponse {
@@ -47,4 +48,10 @@ model Meal {
   recipe_description String
   dietPlan      DietPlan @relation(fields: [dietPlanId], references: [id])
 }
-
+model Blog {
+  blog_id    String @id @default(uuid()) 
+  userId      String  
+  title       String
+  description String
+ 
+}

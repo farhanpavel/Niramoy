@@ -22,8 +22,8 @@ export default function Page() {
   const [user, setUser] = useState({
     title: "",
     description: "",
-    role: "admin",
-    id: id,
+
+    userId: "hello",
   });
 
   const [isLoading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export default function Page() {
     e.preventDefault();
     console.log(user);
     try {
-      const response = await fetch(`/api/notice`, {
+      const response = await fetch(`http://localhost:4000/api/blog`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
