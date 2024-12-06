@@ -77,6 +77,7 @@ const config = {
       rubik: ["Rubik", "sans-serif"],
       satoshi: ["satoshi", "sans-serif"],
       sansSerif: ["Fira Sans", "sans-serif"],
+      tiro: ["Tiro Bangla", "serif"],
     },
   },
   plugins: [require("tailwindcss-animate")],
