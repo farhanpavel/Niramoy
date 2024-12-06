@@ -37,8 +37,8 @@ export function Linecharts() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>ডায়েট</CardTitle>
+        <CardDescription>১ জানুয়ারি - ১ জুন</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -74,10 +74,11 @@ export function Linecharts() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          গত ৬ মাসে আপনি ৩,৬০,০০০ ক্যালরি গ্রহণ করেছেন{" "}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          আগামী ৭ দিনের ডায়েট চার্ট দেখুন
         </div>
       </CardFooter>
     </Card>
