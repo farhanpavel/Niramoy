@@ -76,8 +76,9 @@ export default function Page() {
       );
     });
 
-    // Save PDF
-    doc.save("GymAndNutrition.pdf");
+    // Save PDF (get Blob)
+    const pdfBlob = doc.output("blob");
+    return pdfBlob;
   };
 
   // Handle WhatsApp number change
@@ -85,8 +86,8 @@ export default function Page() {
     setWhatsNumber(e.target.value);
   };
 
-  // Handle send action (PDF generation and sending to WhatsApp)
-  const handleSendToWhatsApp = () => {
+  // Handle sending the PDF URL to WhatsApp
+  const handleSendToWhatsApp = async () => {
     if (!whatsNumber.trim()) {
       setError("Please enter a valid WhatsApp number.");
       return;
@@ -96,12 +97,22 @@ export default function Page() {
     setError(""); // Reset error
 
     try {
-      // Generate PDF
-      generatePDF();
+      // Generate PDF (optional)
+      const pdfBlob = generatePDF();
 
-      // Add your logic to send the PDF via WhatsApp (using an API or other methods)
-      sendMessage()
+      // Manually upload PDF somewhere and get the public URL
+      const pdfURL =
+        "https://your-storage-link.com/path-to-your-uploaded-pdf.pdf"; // Replace this with your actual public URL
 
+      // Encode URL for WhatsApp message
+      const message = `Here is your Gym and Nutrition Plan.\nYou can download it from the following link: ${pdfURL}`;
+      const encodedMessage = encodeURIComponent(message);
+
+      // Construct WhatsApp link with the encoded message
+      const whatsAppLink = `https://wa.me/${whatsNumber}?text=${encodedMessage}`;
+
+      // Open WhatsApp with the link
+      window.open(whatsAppLink, "_blank");
     } catch (err) {
       setError("Error: " + err.message);
     } finally {
@@ -110,30 +121,34 @@ export default function Page() {
   };
 
   const sendMessage = async () => {
-    const url = 'https://graph.facebook.com/v21.0/492083883992907/messages';
-    const token = 'EAAIF0JoKuLIBO4fIq1fPLZA8COooqc4966DRp2jBZCGdhwzNY58sN3PQgttAmH04ZBrL0aNGDBqIDHPAuHds5SmEEKazUgMjQUUNbZCKYoHkvTu24WC8jw7Nq6iVSSKOHQZCdiFTRFzJg4FyvBeJpdybBtRfsjt2arNVuqVGBoZAzQdFal9MHgAZA9WYvPlwQ5GP8j0qXchsILBIaLb5t9FrqMXlGIZD';
+    const url = "https://graph.facebook.com/v21.0/492083883992907/messages";
+    const token =
+      "EAAIF0JoKuLIBO4fIq1fPLZA8COooqc4966DRp2jBZCGdhwzNY58sN3PQgttAmH04ZBrL0aNGDBqIDHPAuHds5SmEEKazUgMjQUUNbZCKYoHkvTu24WC8jw7Nq6iVSSKOHQZCdiFTRFzJg4FyvBeJpdybBtRfsjt2arNVuqVGBoZAzQdFal9MHgAZA9WYvPlwQ5GP8j0qXchsILBIaLb5t9FrqMXlGIZD";
     const data = {
-      messaging_product: 'whatsapp',
-      to: '8801618070200',
-      type: 'template',
+      messaging_product: "whatsapp",
+      to: "8801618070200",
+      type: "template",
       template: {
-        name: 'hello_world',
+        name: "hello_world",
         language: {
-          code: 'en_US'
-        }
-      }
+          code: "en_US",
+        },
+      },
     };
 
     try {
       const response = await axios.post(url, data, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
-      console.log('Message sent:', response.data);
+      console.log("Message sent:", response.data);
     } catch (error) {
-      console.error('Error sending message:', error.response ? error.response.data : error.message);
+      console.error(
+        "Error sending message:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
