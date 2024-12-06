@@ -25,7 +25,7 @@ export const userPost = async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    if (role === "student") {
+    if (role === "patient") {
       const Data = await prisma.user.create({
         data: {
           email,
@@ -50,16 +50,9 @@ export const userCheckPost = async (req, res) => {
       where: {
         email: email,
       },
-      include: {
-        provost: true,
-      },
     });
     if (Data && (await bcrypt.compare(password, Data.password))) {
-      res.status(200).json({
-        role: Data.role,
-        id: Data.user_id,
-        hall_id: Data.provost ? Data.provost.hall_id : null,
-      });
+      res.status(200);
     } else {
       res.status(401).json("invalid Data");
     }
