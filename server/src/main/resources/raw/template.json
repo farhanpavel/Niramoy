@@ -1,18 +1,18 @@
 {
-  "AI_Responses": [{
+  "ai_response": [{
     "id": "BIGINT PRIMARY KEY",
     "conversation_id": "BIGINT FOREIGN KEY REFERENCES Conversations(id)",
     "content": "TEXT",
     "created_at": "TIMESTAMP"
   }],
-  "Exercises": [{
+  "exercises": [{
     "id": "BIGINT PRIMARY KEY",
     "name": "VARCHAR(255)",
     "description": "TEXT. 200 words",
     "category": "VARCHAR(100)",
     "duration_minutes": "INT"
   }],
-  "Diet_Plans": {
+  "diet_plan": {
     "id": "BIGINT PRIMARY KEY",
     "name": "VARCHAR(255)",
     "description": "TEXT. 200 words",

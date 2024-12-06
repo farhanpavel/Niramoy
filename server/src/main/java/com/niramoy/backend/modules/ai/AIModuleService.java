@@ -45,12 +45,87 @@ public class AIModuleService {
         }
     }
 
+    public String getRecipeTemplateJson() {
+    Resource resource = resourceLoader.getResource("classpath:raw/recipe_template.json");
+    try {
+        byte[] fileData = Files.readAllBytes(Paths.get(resource.getURI()));
+        return new String(fileData);
+    } catch (IOException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
     public String handleAiPrompt(String prompt) {
         String templateJson = getRawJson().replace("\"", "\\\"");
         StringBuilder sb = new StringBuilder(prompt);
         sb.append(" Please provide a response in a structured JSON format (values in bangla language keys in said format) that matches the following model: ");
         sb.append(templateJson);
         sb.append(" Make sure no youtube link is example link or defined your_yt_link or something non renderable..must be real youtube link" );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        String requestBody = "{\"contents\":[{\"parts\":[{\"text\":\"" + sb.toString() + "\"}]}]}";
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            String jsonResponse = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+            return jsonResponse.replace("```json\n", "").replace("\n```", "");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public String recipeDescription(String recipeName){
+        String templateJson = getRecipeTemplateJson().replace("\"", "\\\"");
+        StringBuilder sb = new StringBuilder("Please provide a description for the recipe: ");
+        sb.append(recipeName);
+        sb.append(" in a structured JSON format (values in bangla language keys in said format) that matches the following model: ");
+        sb.append(templateJson);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        String requestBody = "{\"contents\":[{\"parts\":[{\"text\":\"" + sb.toString() + "\"}]}]}";
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(API_URL, HttpMethod.POST, entity, String.class);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(response.getBody());
+            String jsonResponse = rootNode.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
+            return jsonResponse.replace("```json\n", "").replace("\n```", "");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getExerciseTemplateJson() {
+        Resource resource = resourceLoader.getResource("classpath:raw/exercise_template.json");
+        try {
+            byte[] fileData = Files.readAllBytes(Paths.get(resource.getURI()));
+            return new String(fileData);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String exerciseDescription(String exerciseName){
+        String templateJson = getExerciseTemplateJson().replace("\"", "\\\"");
+        StringBuilder sb = new StringBuilder("Please provide a description for the exercise: ");
+        sb.append(exerciseName);
+        sb.append(" in a structured JSON format (values in bangla language keys in said format) that matches the following model: ");
+        sb.append(templateJson);
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");

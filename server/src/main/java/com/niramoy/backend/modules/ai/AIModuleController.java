@@ -21,6 +21,17 @@ public class AIModuleController {
         return aiModuleService.handleAiPrompt(prompt);
     }
 
+    @PostMapping("/ai/recipe")
+    public String handleRecipeAI(@RequestBody Map<String, String> requestBody) {
+        String prompt = requestBody.get("prompt");
+        return aiModuleService.recipeDescription(prompt);
+    }
+
+    @PostMapping("/ai/exercise")
+    public String handleExerciseAI(@RequestBody Map<String, String> requestBody) {
+        String prompt = requestBody.get("prompt");
+        return aiModuleService.exerciseDescription(prompt);
+    }
 //    @GetMapping("/ai/template")
 //    public String getRawJson() {
 //        return aiModuleService.getRawJson();
