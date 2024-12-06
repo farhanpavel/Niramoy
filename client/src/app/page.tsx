@@ -5,6 +5,7 @@ import Hero from "./_home/Hero";
 import Feature from "./_home/Feature";
 import Benefits from "./_home/Benefits";
 import Bottom from "./_home/Bottom";
+import Footer from "@/components/Footer/page";
 export default function Home() {
   return (
     <div>
@@ -20,6 +21,9 @@ export default function Home() {
       </div>
       <div className="mt-10">
         <Bottom />
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   );
