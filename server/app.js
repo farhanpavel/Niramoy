@@ -159,8 +159,15 @@ const handleAiPrompt = async (prompt, templateName) => {
       headers: { "Content-Type": "application/json" },
     });
     const jsonResponse =
+<<<<<<< HEAD
       response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     return jsonResponse.replace("```json\n", "").replace("\n```", "");
+=======
+        response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const responseJson =  jsonResponse.replace('```json\n', '').replace('\n```', '');
+    pushToDB(JSON.parse(responseJson), templateName);
+    return responseJson;
+>>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
   } catch (error) {
     console.error(
       "Error in AI API request:",
@@ -189,5 +196,36 @@ app.post("/ai/exercise", async (req, res) => {
   res.send(result || "Error processing AI response");
 });
 
+<<<<<<< HEAD
+=======
+
+
+
+
+// Get last AI response
+
+app.get('/latest', async (req, res) => {
+  const response = await prisma.response.findFirst({
+    orderBy: {
+      created_at: 'desc',
+    },
+    include: {
+      ai_response: true,
+      diet_plan: {
+        include: {
+          meals: true,
+        }
+      },
+      exercises: true,
+    },
+  });
+
+  
+
+  res.send(response);
+});
+
+
+>>>>>>> 7e7103b4f16d69159062c3e44947b081486eb779
 app.use("/api/user", userRouter);
 app.use("/api/blog", blogRouter);
