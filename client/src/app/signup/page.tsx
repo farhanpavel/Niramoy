@@ -27,7 +27,7 @@ export default function Page() {
                   id="email"
                   type="email"
                   placeholder="ইমেইল"
-                />
+                />  
               </div>
                 <div className="mb-6">
                 <input
