@@ -7,7 +7,7 @@ export default function Bottom() {
       <div className="mt-20 bg-[#E81046] rounded-xl p-14 w-[90%] mx-auto">
         <div className="text-center text-white space-y-6">
           <div>
-            <h1 className="text-3xl   font-semibold  font-sansSerif leading-[3rem]">
+            <h1 className="text-3xl   font-medium  font-sansSerif leading-[3rem]">
               উন্মোচন করুন আপনার সুস্বাস্থ্য সম্ভাবনা
               <br />
               নিরাময় এর মাধ্যমে আজই।

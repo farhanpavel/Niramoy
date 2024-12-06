@@ -9,7 +9,9 @@ export default function Benefits() {
   return (
     <div className="font-tiro">
       <div className="text-center">
-        <h1 className="text-[#4a4a4a] text-xl">বৈশিষ্ট্য</h1>
+        <h1 className="text-[#4a4a4a] text-xl border-b-2 inline-block border-[#E81046]">
+          বৈশিষ্ট্য
+        </h1>
         <div className="mt-2 text-2xl">
           <p>
             স্বাস্থ্যসেবার নতুন যুগে প্রবেশ করুন নিরাময়
