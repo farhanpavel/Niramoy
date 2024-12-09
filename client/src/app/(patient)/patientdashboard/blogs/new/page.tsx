@@ -23,7 +23,7 @@ export default function Page() {
     title: "",
     description: "",
 
-    userId: "hello",
+    userId: id || "abc",
   });
 
   const [isLoading, setLoading] = useState(true);
@@ -31,19 +31,33 @@ export default function Page() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
+    setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(user);
+    const formData = new FormData();
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+
+    if (!file) {
+      alert("Please upload an image.");
+      return;
+    }
+
+    formData.append("image", file);
+    formData.append("title", user.title);
+    formData.append("description", user.description);
+    formData.append("userId", user.userId);
+    console.log(formData);
     try {
       const response = await fetch(`http://localhost:4000/api/blog`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
+        body: formData,
       });
+
       if (!response.ok) {
         alert("Server Error");
         throw new Error("Failed to submit data");
@@ -57,6 +71,7 @@ export default function Page() {
       console.log("error", err);
     }
   };
+
   return (
     <div className="flex justify-center items-center h-screen font-tiro">
       <Card className="border-[1px] border-gray-300 w-[80%]">
@@ -69,6 +84,9 @@ export default function Page() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-6">
                 <div className="space-y-2">
+                  <div>
+                    <Input type="file" name="image" className="w-1/4" />
+                  </div>
                   <div className="space-y-2">
                     <Label className="text-xs" htmlFor="name">
                       শিরোনাম
@@ -102,6 +120,7 @@ export default function Page() {
                 <Button
                   type="submit"
                   className=" bg-[#E81046] text-xs hover:bg-red-400 hover:transition-all hover:delay-100"
+                  onClick={() => {}}
                 >
                   জমা দিন
                 </Button>

@@ -1,9 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [blogs, setBlogs] = useState([]);
+  const handleClick = (e) => {
+    Cookies.set("blogid", e);
+    router.push("/patientdashboard/blogs/data");
+  };
 
   // Fetch blog data from API
   useEffect(() => {
@@ -47,7 +54,8 @@ export default function Page() {
               <a href="#">
                 <img
                   className="rounded-t-lg"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqRUblYSdfdjtJ1R-9XCl5qjzVnbo-ScoOWA&s" // Replace with dynamic image URL if needed
+                  src={`${blog.imageUrl}`}
+                  alt={blog.title}
                 />
               </a>
               <div className="p-5">
@@ -57,29 +65,31 @@ export default function Page() {
                   </h5>
                 </a>
                 <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                  {blog.description}
+                  {blog.description.substring(0, 250)}
                 </p>
-                <a
-                  href="#"
-                  className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Read more
-                  <svg
-                    className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 10"
+                <div className="mt-4">
+                  <button
+                    onClick={() => handleClick(blog.blog_id)}
+                    className="flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-[#E81046] rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M1 5h12m0 0L9 1m4 4L9 9"
-                    />
-                  </svg>
-                </a>
+                    আরও পড়ুন
+                    <svg
+                      className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M1 5h12m0 0L9 1m4 4L9 9"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           ))
