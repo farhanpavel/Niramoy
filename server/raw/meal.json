@@ -1,0 +1,19 @@
+{
+  "meals": {
+    "breakfast": {
+      "items": "TEXT",
+      "recipe_description": "TEXT. 200 words recipe guide",
+      "youtube_link": "VARCHAR(255)"
+    },
+    "lunch": {
+      "items": "TEXT",
+      "recipe_description": "TEXT. 200 words recipe guide",
+      "youtube_link": "VARCHAR(255)"
+    },
+    "dinner": {
+      "items": "TEXT",
+      "recipe_description": "TEXT. 200 words recipe guide",
+      "youtube_link": "VARCHAR(255)"
+    }
+  }
+}

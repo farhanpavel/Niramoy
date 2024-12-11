@@ -14,7 +14,12 @@ const API_URL =
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyD4tJ9Gk9WFr7iTDZfeoP7aJcXynglhDVM";
 
 import { PrismaClient } from "@prisma/client";
-import { pushToDB } from "./module/db-helper.js";
+import {
+  pushToDB,
+  updateDietPlan,
+  updateExercises,
+} from "./module/db-helper.js";
+import promptRouter from "./routes/promptRoute.js";
 const prisma = new PrismaClient();
 
 // Test Route
@@ -37,6 +42,25 @@ const getTemplateJson = (fileName) => {
         "difficulty_level": "VARCHAR(50)",
         "duration_minutes": "INT",
      
+      }
+    }`;
+  }
+  if (fileName === "meal.json") {
+    return ` "meals": {
+      "breakfast": {
+        "items": "TEXT",
+        "recipe_description": "TEXT. 200 words recipe guide",
+        "youtube_link": "VARCHAR(255)"
+      },
+      "lunch": {
+        "items": "TEXT",
+        "recipe_description": "TEXT. 200 words recipe guide",
+        "youtube_link": "VARCHAR(255)"
+      },
+      "dinner": {
+        "items": "TEXT",
+        "recipe_description": "TEXT. 200 words recipe guide",
+        "youtube_link": "VARCHAR(255)"
       }
     }`;
   }
@@ -114,7 +138,7 @@ const handleAiPrompt = async (prompt, id, templateName) => {
 
   const promptBuilder = [
     prompt,
-    `Please provide a response in a structured JSON format ( keys as in said format) that matches the following model:`,
+    `Please provide a response in a structured JSON format (ans should in be bangla & keys as in said format) that matches the following model:`,
     templateJson,
     `Ensure that all YouTube links provided are valid and accessible. Do not include placeholder or unavailable links. Each link must correspond to real, publicly available YouTube videos.`,
   ].join(" ");
@@ -149,7 +173,7 @@ const handleAiPrompt = async (prompt, id, templateName) => {
 
     // Enrich with valid YouTube links
     responseJson = await enrichWithYouTubeLinks(responseJson);
-
+    console.log(responseJson);
     // Push to the database
     await pushToDB(responseJson, id, templateName);
 
@@ -161,6 +185,129 @@ const handleAiPrompt = async (prompt, id, templateName) => {
     );
     return { error: "Error processing AI response. Please check the logs." };
   }
+};
+// For Update
+const anotherAiPrompt = async (prompt, id, templateName) => {
+  console.log("Template Name:", templateName);
+
+  const templateJson = getTemplateJson(templateName);
+  if (!templateJson) {
+    console.error("No template found for the given template name.");
+    return null;
+  }
+
+  const promptBuilder = [
+    prompt,
+    `Please provide a response in a structured JSON format (ans should be in Bangla & keys as in the given template):`,
+    templateJson,
+  ].join(" ");
+
+  const requestBody = {
+    contents: [
+      {
+        parts: [
+          {
+            text: promptBuilder.trim(),
+          },
+        ],
+      },
+    ],
+  };
+
+  try {
+    const response = await axios.post(API_URL, requestBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // Log raw response for debugging
+    const rawResponse =
+      response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    // Remove unwanted characters and ensure the response looks like JSON
+    const cleanedResponse = rawResponse
+      .replace(/```json\s*/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    // Check if cleaned response looks like valid JSON
+    try {
+      let responseJson = JSON.parse(cleanedResponse);
+
+      // Push to the database
+      if (templateName == "exercise_template.json") {
+        responseJson = await enrichWithYouTubeLinksForExercise(responseJson);
+        await updateExercises(responseJson, id, templateName);
+      } else if (templateName == "meal.json") {
+        responseJson = await enrichWithYouTubeLinksForDiet(responseJson);
+        await updateDietPlan(responseJson, id, templateName);
+      }
+      console.log("Parsed AI Response:", responseJson);
+      return responseJson;
+    } catch (err) {
+      console.error("Error parsing AI JSON:", err);
+      return { error: "Failed to parse AI response." };
+    }
+  } catch (error) {
+    console.error(
+      "Error in AI API request:",
+      error.response?.data || error.message
+    );
+    return { error: "Error processing AI response. Please check the logs." };
+  }
+};
+const enrichWithYouTubeLinksForExercise = async (responseJson) => {
+  // Helper function to fetch YouTube link for a given query
+  const replaceLinks = async (text) => {
+    const query = text.split(".")[0]; // Simplified query extraction
+    console.log("YouTube Query:", query); // Log the query
+    const link = await fetchYouTubeLink(query);
+    return link || "https://www.youtube.com"; // Fallback link
+  };
+
+  // Check if responseJson is an array and iterate over it
+  if (Array.isArray(responseJson)) {
+    // Iterate over the array of exercises (even if there's only one)
+    for (const item of responseJson) {
+      const exercise = item.exercise;
+      if (exercise && exercise.name) {
+        exercise.youtube_link = await replaceLinks(exercise.name); // Assign YouTube link for each exercise
+      }
+    }
+  } else if (responseJson.exercise) {
+    // If it's a single exercise, handle it directly
+    const exercise = responseJson.exercise;
+    if (exercise.name) {
+      exercise.youtube_link = await replaceLinks(exercise.name); // Assign YouTube link for single exercise
+    }
+  } else {
+    console.error("No valid exercises found in response:", responseJson);
+  }
+
+  return responseJson; // Return enriched response
+};
+const enrichWithYouTubeLinksForDiet = async (responseJson) => {
+  // Helper function to fetch YouTube link for a given query
+  const replaceLinks = async (text) => {
+    const query = text.split(",")[0].trim(); // Simplified query extraction using first item
+    console.log("YouTube Query:", query); // Log the query
+    const link = await fetchYouTubeLink(query); // Replace this with your API logic
+    return link || "https://www.youtube.com"; // Fallback link
+  };
+
+  // Check if meals object exists and is valid
+  if (responseJson.meals && typeof responseJson.meals === "object") {
+    for (const mealType of Object.keys(responseJson.meals)) {
+      const meal = responseJson.meals[mealType];
+      if (meal.items) {
+        // Generate YouTube link based on meal items
+        meal.youtube_link = await replaceLinks(meal.items);
+      }
+    }
+  } else {
+    console.error("Invalid meals data in responseJson:", responseJson);
+  }
+
+  return responseJson; // Return enriched responseJson with YouTube links
 };
 
 const enrichWithYouTubeLinks = async (responseJson) => {
@@ -220,6 +367,12 @@ const fetchYouTubeLink = async (query) => {
 // Routes
 app.post("/ai/niramoy", async (req, res) => {
   const { prompt, id } = req.body;
+  const promptResult = await prisma.prompt.create({
+    data: {
+      user_id: id,
+      description: prompt,
+    },
+  });
   const result = await handleAiPrompt(prompt, id, "template.json");
   res.json(result || { error: "Error processing AI response" });
 });
@@ -261,10 +414,51 @@ app.get("/latest/:id", async (req, res) => {
     res.status(500).json({ error: "Error fetching latest response" });
   }
 });
+app.put("/ai/exercise", async (req, res) => {
+  const { prompt, userId } = req.body; // Extract prompt and userId from the request body
+
+  try {
+    const result = await anotherAiPrompt(
+      prompt,
+      userId,
+      "exercise_template.json"
+    );
+
+    if (result?.error) {
+      return res.status(500).json({ error: result.error });
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating exercises:", error);
+    res
+      .status(500)
+      .json({ error: "Error processing AI response. Please check the logs." });
+  }
+});
+app.put("/ai/nutrion", async (req, res) => {
+  const { prompt, userId } = req.body; // Extract prompt and userId from the request body
+
+  try {
+    const result = await anotherAiPrompt(prompt, userId, "meal.json");
+
+    if (result?.error) {
+      return res.status(500).json({ error: result.error });
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error("Error updating exercises:", error);
+    res
+      .status(500)
+      .json({ error: "Error processing AI response. Please check the logs." });
+  }
+});
 
 // Routers
 app.use("/api/user", userRouter);
 app.use("/api/blog", blogRouter);
+app.use("/api/prompt", promptRouter);
 
 // Start Server
 app.listen(PORT, () => {

@@ -43,6 +43,7 @@ model AIResponse {
 
 model Exercise {
   id              Int      @id @default(autoincrement())
+  user_id         String
   name            String
   description     String
   category        String
@@ -57,6 +58,7 @@ model Exercise {
 model Meal {
   id                 Int      @id @default(autoincrement())
   dietPlanId         Int
+    user_id         String
   type               String
   items              String
   recipe_description String
@@ -82,4 +84,9 @@ model Blog {
   title      String
   description String
   imageUrl   String
+}
+model Prompt{
+  id String @id @default(uuid())
+  user_id String
+  description String
 }

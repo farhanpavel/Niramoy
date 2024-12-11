@@ -4,21 +4,76 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Activity, Dumbbell } from "lucide-react"; // Importing icons from lucide-react
 import Cookies from "js-cookie";
+
 const ExercisePage: React.FC = () => {
   const [exercises, setExercises] = useState([]);
+  const [prompt, setPrompt] = useState("");
   const id = Cookies.get("id");
-  useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/latest/${id}`);
-        setExercises(response.data.exercises);
-      } catch (error) {
-        console.error("Error fetching exercises:", error);
-      }
-    };
 
+  // Function to generate new exercises using AI from the backend
+  const regenerateExercises = async () => {
+    try {
+      // Call the backend to regenerate exercises based on user ID
+      const response = await axios.put("http://localhost:4000/ai/exercise", {
+        prompt: prompt,
+        userId: id,
+      });
+
+      setExercises(response.data.exercises); // Update state with new exercises
+    } catch (error) {
+      console.error("Error regenerating exercises:", error);
+    }
+  };
+
+  // Fetch exercises initially when the page loads
+  const fetchExercises = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/latest/${id}`);
+      setExercises(response.data.exercises); // Set exercises fetched from the backend
+    } catch (error) {
+      console.error("Error fetching exercises:", error);
+    }
+  };
+
+  // Fetch prompt for the user
+  const fetchPrompt = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/prompt/${id}`);
+      setPrompt(response.data.description); // Assuming response.data.description holds the prompt
+    } catch (error) {
+      console.error("Error fetching prompt:", error);
+    }
+  };
+
+  // Check and regenerate exercises if needed
+  const checkAndRegenerateExercises = async () => {
+    const currentDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+
+    // Retrieve the last saved date from localStorage (or your database)
+    const lastSavedDate = localStorage.getItem("lastSavedDateExercises");
+
+    // If the date doesn't match today's date, update and regenerate exercises
+    if (lastSavedDate !== currentDate) {
+      console.log("Updating exercises for today:", currentDate);
+
+      // Regenerate exercises
+      await regenerateExercises();
+
+      // After updating, set the last saved date to today
+      localStorage.setItem("lastSavedDateExercises", currentDate);
+    } else {
+      console.log("Exercises already updated for today.");
+    }
+  };
+
+  useEffect(() => {
+    // Fetch exercises and prompt initially
     fetchExercises();
-  }, []);
+    fetchPrompt();
+
+    // Check if exercises need to be regenerated based on the date
+    checkAndRegenerateExercises();
+  }, [id]);
 
   const icons = [
     <Activity key="activity" className="w-6 h-6" />,
