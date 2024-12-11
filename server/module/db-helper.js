@@ -171,7 +171,7 @@ const updateDietPlan = async (responseJson, user_id) => {
     },
   });
 
-  const responseId = 2;
+  const responseId = response.dietPlanId;
 
   // Step 2: Transaction to update diet plan and meals
   // Step 2a: Delete existing diet plans for the user

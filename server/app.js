@@ -20,6 +20,7 @@ import {
   updateExercises,
 } from "./module/db-helper.js";
 import promptRouter from "./routes/promptRoute.js";
+import dateRouter from "./routes/dateRoute.js";
 const prisma = new PrismaClient();
 
 // Test Route
@@ -459,7 +460,7 @@ app.put("/ai/nutrion", async (req, res) => {
 app.use("/api/user", userRouter);
 app.use("/api/blog", blogRouter);
 app.use("/api/prompt", promptRouter);
-
+app.use("/api/date", dateRouter);
 // Start Server
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);

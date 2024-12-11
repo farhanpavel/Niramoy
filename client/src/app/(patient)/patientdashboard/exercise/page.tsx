@@ -49,20 +49,28 @@ const ExercisePage: React.FC = () => {
   const checkAndRegenerateExercises = async () => {
     const currentDate = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
-    // Retrieve the last saved date from localStorage (or your database)
-    const lastSavedDate = localStorage.getItem("lastSavedDateExercises");
+    try {
+      // Fetch the stored date from the database (instead of localStorage)
+      const response = await axios.get(`http://localhost:4000/api/date/${id}`);
+      const storedDate = response.data.date; // Assuming response.data.date holds the stored date
+      console.log(storedDate);
 
-    // If the date doesn't match today's date, update and regenerate exercises
-    if (lastSavedDate !== currentDate) {
-      console.log("Updating exercises for today:", currentDate);
+      // If the date doesn't match today's date, update and regenerate exercises
+      if (storedDate !== currentDate) {
+        console.log("Updating exercises for today:", currentDate);
 
-      // Regenerate exercises
-      await regenerateExercises();
+        // Regenerate exercises
+        await regenerateExercises();
 
-      // After updating, set the last saved date to today
-      localStorage.setItem("lastSavedDateExercises", currentDate);
-    } else {
-      console.log("Exercises already updated for today.");
+        // After updating, update the stored date in the database
+        await axios.put(`http://localhost:4000/api/date/${id}`, {
+          date: currentDate,
+        });
+      } else {
+        console.log("Exercises already updated for today.");
+      }
+    } catch (error) {
+      console.error("Error checking or updating date:", error);
     }
   };
 

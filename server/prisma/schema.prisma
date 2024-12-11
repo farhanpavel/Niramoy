@@ -58,7 +58,7 @@ model Exercise {
 model Meal {
   id                 Int      @id @default(autoincrement())
   dietPlanId         Int
-    user_id         String
+  user_id         String
   type               String
   items              String
   recipe_description String
@@ -89,4 +89,10 @@ model Prompt{
   id String @id @default(uuid())
   user_id String
   description String
+}
+
+model Datepicker{
+  id Int @id @default(autoincrement())
+  date String
+  user_id String @unique
 }
