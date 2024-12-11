@@ -54,15 +54,9 @@ const navItems: NavItem[] = [
     label: "blogs",
   },
   {
-    title: "forums",
+    title: "Forums",
     href: "/patientdashboard/forums",
     icon: <MdOutlineForum />,
-    label: "forums",
-  },
-  {
-    title: "whatsapp",
-    href: "/patientdashboard/whatsapp",
-    icon: <RiWhatsappFill />,
     label: "forums",
   },
 ];

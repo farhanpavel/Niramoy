@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 export default function Page() {
   const [isvalid, setvalid] = useState(false);
@@ -42,8 +42,11 @@ export default function Page() {
       setvalid(false);
       const data = await response.json();
       console.log(data);
-      if (data.role === "patient") {
+      Cookies.set("id", data.id);
+      if (data.role === "patient" && data.status == 0) {
         router.push("/ai");
+      } else {
+        router.push("/patientdashboard/overview");
       }
     } catch (err) {
       console.log("error", err);

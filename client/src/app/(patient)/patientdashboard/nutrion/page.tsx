@@ -3,14 +3,14 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Sun, Moon, Cloud } from "lucide-react"; // Importing icons from lucide-react
-
+import Cookies from "js-cookie";
 const AIPromptPage: React.FC = () => {
   const [dietPlan, setDietPlan] = useState(null);
-
+  const id = Cookies.get("id");
   useEffect(() => {
     const fetchDietPlan = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/latest");
+        const response = await axios.get(`http://localhost:4000/latest/${id}`);
         setDietPlan(response.data.diet_plan);
       } catch (error) {
         console.error("Error fetching diet plan:", error);
@@ -74,7 +74,22 @@ const AIPromptPage: React.FC = () => {
                   {meal.type}
                 </h3>
               </div>
-              <p className="mb-2">
+              {meal.youtube_link && (
+                <div className="mt-2 rounded-lg overflow-hidden shadow-md">
+                  <iframe
+                    width="100%"
+                    height="200"
+                    src={`https://www.youtube.com/embed/${new URL(
+                      meal.youtube_link
+                    ).searchParams.get("v")}`}
+                    title={meal.name}
+                    frameBorder="0"
+                    allowFullScreen
+                    className="transition duration-300 hover:scale-105"
+                  ></iframe>
+                </div>
+              )}
+              <p className="mb-2 mt-4">
                 <strong>Items:</strong> {meal.items}
               </p>
               <p>

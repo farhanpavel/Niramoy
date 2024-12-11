@@ -14,7 +14,7 @@ model User {
   email       String @unique
   password    String
   role        String
-
+  status      Int @default(0)
 }
 
 model Response {
@@ -22,9 +22,9 @@ model Response {
   
   ai_response_id Int
   diet_plan_id Int
-
+  user_id String
   created_at    DateTime  @default(now())
-
+  
   ai_response   AIResponse @relation(fields: [ai_response_id], references: [id])
   exercises     Exercise[]
   diet_plan    DietPlan @relation(fields: [diet_plan_id], references: [id])
@@ -42,16 +42,28 @@ model AIResponse {
 }
 
 model Exercise {
-  id            Int      @id @default(autoincrement())
-  name          String
-  description   String
-  category      String
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String
+  category        String
   duration_minutes Int
-  created_at    DateTime  @default(now())
+  youtube_link    String?  // Add this to store YouTube links
+  created_at      DateTime @default(now())
 
-  response_id   Int
-  response      Response @relation(fields: [response_id], references: [id])
+  response_id     Int
+  response        Response @relation(fields: [response_id], references: [id])
 }
+
+model Meal {
+  id                 Int      @id @default(autoincrement())
+  dietPlanId         Int
+  type               String
+  items              String
+  recipe_description String
+  youtube_link       String?  // Add this to store YouTube links
+  dietPlan           DietPlan @relation(fields: [dietPlanId], references: [id])
+}
+
 
 model DietPlan {
   id            Int      @id @default(autoincrement())
@@ -63,14 +75,7 @@ model DietPlan {
   created_at    DateTime  @default(now())
 }
 
-model Meal {
-  id            Int      @id @default(autoincrement())
-  dietPlanId    Int       
-  type          String
-  items         String
-  recipe_description String
-  dietPlan      DietPlan @relation(fields: [dietPlanId], references: [id])
-}
+
 model Blog {
   blog_id    String @id @default(uuid())
   userId     String

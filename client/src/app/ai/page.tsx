@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie";
 const AIPromptPage: React.FC = () => {
   const router = useRouter();
   const [userInput, setUserInput] = useState("");
@@ -21,6 +21,7 @@ const AIPromptPage: React.FC = () => {
     try {
       const response = await axios.post("http://localhost:4000/ai/niramoy", {
         prompt: userInput,
+        id: Cookies.get("id"),
       });
 
       console.log("Response:", response.data);

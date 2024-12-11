@@ -52,7 +52,9 @@ export const userCheckPost = async (req, res) => {
       },
     });
     if (Data && (await bcrypt.compare(password, Data.password))) {
-      res.status(200).json({ role: Data.role });
+      res
+        .status(200)
+        .json({ role: Data.role, id: Data.user_id, status: Data.status });
     } else {
       res.status(401).json("invalid Data");
     }
