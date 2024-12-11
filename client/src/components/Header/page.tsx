@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
+import Cookies from "js-cookie";
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const role = Cookies.get("role");
   return (
     <div className="flex justify-center font-tiro">
       <div className="fixed w-[90%] mt-2 lg:w-[70%] z-50 flex items-center justify-between p-2 bg-[#FAFAFA] shadow-xl rounded-lg">
@@ -76,12 +76,21 @@ export default function Header() {
         </div>
 
         <div className="hidden md:block">
-          <Link
-            href="/signin"
-            className="bg-red-600 px-6 py-3 text-white rounded-full text-xs font-semibold 2xl:px-8 2xl:py-4"
-          >
-            লগইন
-          </Link>
+          {role && role === "patient" ? (
+            <Link
+              href="/patientdashboard/overview"
+              className="bg-red-600 px-6 py-3 text-white rounded-full text-xs font-semibold 2xl:px-8 2xl:py-4"
+            >
+              ড্যাশবোর্ড
+            </Link>
+          ) : (
+            <Link
+              href="/signin"
+              className="bg-red-600 px-6 py-3 text-white rounded-full text-xs font-semibold 2xl:px-8 2xl:py-4"
+            >
+              লগইন
+            </Link>
+          )}
         </div>
       </div>
     </div>

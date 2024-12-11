@@ -1,9 +1,9 @@
 "use client";
-import React, { use, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie";
 export default function Page() {
   const [isvalid, setvalid] = useState(false);
   const router = useRouter();
@@ -13,6 +13,12 @@ export default function Page() {
     password: "",
     confirmpassword: "",
     role: "patient",
+  });
+  useEffect(() => {
+    const role = Cookies.get("role");
+    if (role === "patient") {
+      router.push("/patientdashboard/overview");
+    }
   });
   const { name, email, password, confirmpassword } = user;
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

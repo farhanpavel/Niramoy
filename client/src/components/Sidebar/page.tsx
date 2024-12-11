@@ -12,6 +12,8 @@ import { FaMicroblog } from "react-icons/fa";
 import { MdOutlineForum } from "react-icons/md";
 import { RiWhatsappFill } from "react-icons/ri";
 import Image from "next/image";
+import { FiLogOut } from "react-icons/fi"; // Import logout icon
+import Cookies from "js-cookie"; // For clearing cookies or handling logout
 
 type NavItem = {
   title: string;
@@ -35,7 +37,7 @@ const navItems: NavItem[] = [
     label: "aitalk",
   },
   {
-    title: "Nutrion",
+    title: "Nutrition",
     href: "/patientdashboard/nutrion",
     icon: <IoFastFoodSharp />,
     label: "nutrion",
@@ -66,6 +68,13 @@ export default function Sidebar() {
   const path = usePathname(); // This will provide the current pathname
   const searchParams = useSearchParams();
   const tripPlanId = searchParams.get("tripPlanId");
+
+  // Logout function
+  const handleLogout = () => {
+    Cookies.remove("role");
+
+    window.location.href = "/signin";
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -134,6 +143,20 @@ export default function Sidebar() {
               </Link>
             ))}
           </nav>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="min-h-[10%] rounded-md px-3 py-2 text-sm font-medium text-gray-700  transition-colors"
+          >
+            <div
+              className={`h-8 w-8 flex items-center justify-center rounded-full bg-gray-300 ${
+                isSidebarOpen ? "mr-2" : ""
+              }`}
+            >
+              <FiLogOut />
+            </div>
+          </button>
         </div>
       </nav>
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Cookies from "js-cookie";
@@ -9,6 +9,12 @@ export default function Page() {
   const [user, setUser] = useState({ email: "", password: "" });
   const { email, password } = user;
   const router = useRouter();
+  useEffect(() => {
+    const role = Cookies.get("role");
+    if (role === "patient") {
+      router.push("/patientdashboard/overview");
+    }
+  });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser((x) => ({
       ...x,
@@ -43,6 +49,7 @@ export default function Page() {
       const data = await response.json();
       console.log(data);
       Cookies.set("id", data.id);
+      Cookies.set("role", data.role);
       if (data.role === "patient" && data.status == 0) {
         router.push("/ai");
       } else {
