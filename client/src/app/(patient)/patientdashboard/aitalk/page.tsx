@@ -11,7 +11,7 @@ export default function ChatbotPage() {
 
   // Initialize the GoogleGenerativeAI instance
   const genAI = new GoogleGenerativeAI(
-    "AIzaSyDWOKCVCFlGZmI7jlW3BeQJImGaxc3oNX4"
+    "AIzaSyDX4V5zqXBXuevk_-lL_gsQXd9asadr-NI"
   );
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 

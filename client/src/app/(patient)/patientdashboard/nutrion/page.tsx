@@ -68,7 +68,7 @@ const AIPromptPage: React.FC = () => {
 
     try {
       const response = await axios.get(`http://localhost:4000/api/date/${id}`);
-      const storedDate = response.data.date; // Assuming response.data.date holds the stored date
+      const storedDate = response.data.dates; // Assuming response.data.date holds the stored date
       console.log(storedDate);
       if (storedDate !== currentDate) {
         console.log("Updating nutrition for today:", currentDate);
@@ -77,7 +77,7 @@ const AIPromptPage: React.FC = () => {
 
         // Update the stored date in the database
         await axios.put(`http://localhost:4000/api/date/${id}`, {
-          date: currentDate,
+          dates: currentDate,
         });
       } else {
         console.log("Nutrition already updated for today.");

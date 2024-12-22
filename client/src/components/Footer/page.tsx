@@ -5,7 +5,7 @@ export default function Footer() {
     <div className="font-tiro">
       <div>
         <Image
-          src="/images/logo.png"
+          src="/images/logo2.png"
           width={200}
           height={100}
           alt="Logo"

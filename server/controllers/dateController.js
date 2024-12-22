@@ -17,16 +17,16 @@ export const datePut = async (req, res) => {
       user_id: req.params.id,
     },
     data: {
-      date: req.body.date,
+      dates: req.body.dates,
     },
   });
   res.status(200).json(Data);
 };
 export const datePost = async (req, res) => {
-  const { date, user_id } = req.body;
+  const { dates, user_id } = req.body;
   const Data = await prisma.datepicker.create({
     data: {
-      date,
+      dates,
       user_id,
     },
   });

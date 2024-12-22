@@ -11,7 +11,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000; // Default PORT if not in .env
 const API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyD4tJ9Gk9WFr7iTDZfeoP7aJcXynglhDVM";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyDX4V5zqXBXuevk_-lL_gsQXd9asadr-NI";
 
 import { PrismaClient } from "@prisma/client";
 import {
@@ -21,6 +21,7 @@ import {
 } from "./module/db-helper.js";
 import promptRouter from "./routes/promptRoute.js";
 import dateRouter from "./routes/dateRoute.js";
+import feedbackRouter from "./routes/feedbackRoute.js";
 const prisma = new PrismaClient();
 
 // Test Route
@@ -166,10 +167,11 @@ const handleAiPrompt = async (prompt, id, templateName) => {
       response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     // console.log("AI Raw Response:", rawResponse);
     const cleanedResponse = rawResponse
-      .replace(/```json\s*/g, "")
-      .replace(/```/g, "")
+      .replace(/```json\s*/g, "") // Remove Markdown code block markers
+      .replace(/```/g, "") // Remove closing code block markers
+      .replace(/^\s*[^[{]+/, "") // Remove any non-JSON text at the start
+      .replace(/[^}\]]+\s*$/, "") // Remove any non-JSON text at the end
       .trim();
-
     let responseJson = JSON.parse(cleanedResponse);
 
     // Enrich with valid YouTube links
@@ -461,6 +463,7 @@ app.use("/api/user", userRouter);
 app.use("/api/blog", blogRouter);
 app.use("/api/prompt", promptRouter);
 app.use("/api/date", dateRouter);
+app.use("/api/feedback", feedbackRouter);
 // Start Server
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);

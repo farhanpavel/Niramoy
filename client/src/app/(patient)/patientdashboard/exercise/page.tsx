@@ -52,7 +52,7 @@ const ExercisePage: React.FC = () => {
     try {
       // Fetch the stored date from the database (instead of localStorage)
       const response = await axios.get(`http://localhost:4000/api/date/${id}`);
-      const storedDate = response.data.date; // Assuming response.data.date holds the stored date
+      const storedDate = response.data.dates; // Assuming response.data.date holds the stored date
       console.log(storedDate);
 
       // If the date doesn't match today's date, update and regenerate exercises
@@ -64,7 +64,7 @@ const ExercisePage: React.FC = () => {
 
         // After updating, update the stored date in the database
         await axios.put(`http://localhost:4000/api/date/${id}`, {
-          date: currentDate,
+          dates: currentDate,
         });
       } else {
         console.log("Exercises already updated for today.");

@@ -31,12 +31,12 @@ const AIPromptPage: React.FC = () => {
       const currentDate = new Date().toISOString().split("T")[0]; // Get the current date in YYYY-MM-DD format
       await axios.post("http://localhost:4000/api/date", {
         user_id: Cookies.get("id"),
-        date: currentDate,
+        dates: currentDate,
       });
 
       console.log("Date and user ID saved:", {
         user_id: Cookies.get("id"),
-        date: currentDate,
+        dates: currentDate,
       });
 
       // After both requests are successful, navigate to the next page

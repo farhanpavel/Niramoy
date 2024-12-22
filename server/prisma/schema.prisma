@@ -93,6 +93,15 @@ model Prompt{
 
 model Datepicker{
   id Int @id @default(autoincrement())
-  date String
+  dates String
   user_id String @unique
+}
+
+model feedback{
+  feedback_id Int @id @default(autoincrement())
+  user_id String
+  feed_gym  String[]
+  feed_nutrion String[]
+  feed_mood String
+  date DateTime @default(now())
 }
