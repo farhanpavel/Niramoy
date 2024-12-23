@@ -11,7 +11,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000; // Default PORT if not in .env
 const API_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyDX4V5zqXBXuevk_-lL_gsQXd9asadr-NI";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCTVO9ogrmfjtWIfWRDTg4YP24fXe7uEpg";
 
 import { PrismaClient } from "@prisma/client";
 import {
@@ -167,11 +167,10 @@ const handleAiPrompt = async (prompt, id, templateName) => {
       response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     // console.log("AI Raw Response:", rawResponse);
     const cleanedResponse = rawResponse
-      .replace(/```json\s*/g, "") // Remove Markdown code block markers
-      .replace(/```/g, "") // Remove closing code block markers
-      .replace(/^\s*[^[{]+/, "") // Remove any non-JSON text at the start
-      .replace(/[^}\]]+\s*$/, "") // Remove any non-JSON text at the end
+      .replace(/```json\s*/g, "")
+      .replace(/```/g, "")
       .trim();
+
     let responseJson = JSON.parse(cleanedResponse);
 
     // Enrich with valid YouTube links
@@ -403,7 +402,12 @@ app.get("/latest/:id", async (req, res) => {
       include: {
         ai_response: true,
         exercises: true, // Include exercises with YouTube links
-        diet_plan: { include: { meals: true } }, // Include meals with YouTube links
+        diet_plan: { 
+          include: {
+            meals: true
+          }
+        }, // Include meals with YouTube links,
+        mood: true,
       },
     });
 

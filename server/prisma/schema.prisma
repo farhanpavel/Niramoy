@@ -21,13 +21,14 @@ model Response {
   id            Int      @id @default(autoincrement())
   
   ai_response_id Int
-  diet_plan_id Int
+  diet_plan_id Int @unique
   user_id String
   created_at    DateTime  @default(now())
   
   ai_response   AIResponse @relation(fields: [ai_response_id], references: [id])
   exercises     Exercise[]
-  diet_plan    DietPlan @relation(fields: [diet_plan_id], references: [id])
+  diet_plan    DietPlan? @relation(fields: [diet_plan_id], references: [id])
+  mood Mood?
 }
 
 model AIResponse {
@@ -48,6 +49,7 @@ model Exercise {
   description     String
   category        String
   duration_minutes Int
+  completed       Boolean @default(false)
   youtube_link    String?  // Add this to store YouTube links
   created_at      DateTime @default(now())
 
@@ -62,6 +64,7 @@ model Meal {
   type               String
   items              String
   recipe_description String
+  completed          Boolean @default(false)
   youtube_link       String?  // Add this to store YouTube links
   dietPlan           DietPlan @relation(fields: [dietPlanId], references: [id])
 }
@@ -72,9 +75,9 @@ model DietPlan {
   name          String
   description   String
   calorie_target Int
-  meals         Meal[]
-  responses     Response[]
+  response      Response?
   created_at    DateTime  @default(now())
+  meals Meal[]
 }
 
 
@@ -103,5 +106,14 @@ model feedback{
   feed_gym  String[]
   feed_nutrion String[]
   feed_mood String
+  date DateTime @default(now())
+}
+
+model Mood {
+  id Int @id @default(autoincrement())
+  user_id String
+  mood String
+  responseId Int @unique
+  response Response @relation(fields: [responseId], references: [id])
   date DateTime @default(now())
 }
