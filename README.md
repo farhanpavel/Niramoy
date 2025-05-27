@@ -2,6 +2,8 @@
 
 Niramoy is a conversational AI-powered Mental Health Check-in Assistant designed to promote daily mental health tracking, self-care, and community support. By providing personalized insights and recommendations, this application helps users take proactive steps towards their mental well-being.
 
+![screely-1748360541491](https://github.com/user-attachments/assets/e1d282f4-65b6-4f7e-84d6-1178e7387f31)
+
 ## Key Features
 
 1. AI-Powered Mental Health Assistant
@@ -54,3 +56,17 @@ npm run dev
 ```
 
 4. Access the frontend at `http://localhost:3000` and backend at `http://localhost:4000`
+
+5. env for backend
+
+```
+DATABASE_URL=""
+PORT=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+REFRESH_TOKEN_SECRET=
+ACCESS_TOKEN_SECRET=
+STORE_ID=
+STORE_PASSWORD=
+```
